@@ -39,6 +39,12 @@
       display: flex;
       justify-content: center;
     }
+    .not-mobile{
+      display: block;
+    } 
+    .mobile{
+      display: none;
+    }
 
     @media (max-width: 1000px) {
       h1 {
@@ -55,20 +61,28 @@
 
       p,
       div,
-      span {
-        font-size: 12px;
+      span,button{
+        font-size: 12px !important;
+      }
+      .btnd{
+        font-size: 15px !important;
       }
 
       .check-box {
-        width: 80vw !important;
+        width: 90vw !important;
       }
 
       .image {
         margin: 0 20px; 
         width: 60vw !important;
       }
+      .not-mobile{
+        display: none;
+      } 
+      .mobile{ 
+        display: block;  
+      }
     }
-
 
     .check-box {
       width: 57vw;
@@ -127,16 +141,14 @@
       <div class="image-frame">
         <div style="position: relative;">
           <div id="output" class="image"></div>
-          <!-- <div style="width: 13vw; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgb(255, 255, 255); border: 7px solid rgb(233, 33, 63); border-radius: 50%;">
-            <img style="width: 100%; height: auto;"
-              src='https://raw.githubusercontent.com/ZeveNor/Unicow/refs/heads/main/src/img/a.png' alt='' />
-          </div> -->
         </div>
         <h1 id="total"></h1>
         <h3 id="destination"></h3>
       </div>
-      <div class="center">
-        <button style="width: 80%;" data-bs-toggle="button" type="button" id="nonValue" class="btn btn-outline-success mb-3 btn-lg">ไม่ระบุจำนวนเงิน</button>
+      <div class="center flex-row gap-2">
+        <button style="width: 90%;" data-bs-toggle="button" type="button" id="nonValue" class="btn btnd btn-outline-success mb-3 btn-lg">ไม่ระบุจำนวนเงิน</button>
+        <button style="width: 90%;" type="button" id="nonValue"
+          class="btn btn-primary mb-3 btn-lg btnd">บันทึกรูปภาพ</button>
       </div>
     </div>
     <div class="check-box">
@@ -155,7 +167,35 @@
             ✅ รองรับ E-Wallet
           </button>
         </div>
-        <div>
+        <div class="mobile">
+          <p style="margin-bottom: 5px; font-weight: 500;">สร้างลิงก์ API ของตัวเอง</p>
+          <div class="input-group mb-3">
+            <!-- <span class="input-group-text" id="basic-addon1">ปลายทาง</span> -->
+            <input type="text" id="dest" class="form-control" placeholder="เบอร์โทรศัพท์ / บัตรปชช. / E-Wallet ID"
+              aria-label="Username" aria-describedby="basic-addon1">
+          </div>
+          <div class="input-group mb-3">
+            <!-- <span class="input-group-text" id="basic-addon1">จำนวนเงิน</span> --> 
+            <input type="text" id="num" class="form-control" placeholder="จำนวนเช่น 20 หรือ 20.00" aria-label="Username"
+              aria-describedby="basic-addon1">
+          </div>
+          <button type="button" id="create" class="btn btn-sm btn-primary">สร้าง</button>
+          <button type="button" id="viewQR" class="btn btn-sm btn-outline-success">แสดง QRCODE</button>
+          <form class="row g-0 my-3"> 
+            <div class="col-sm">
+              <input type="text" class="form-control sm text-gen" readonly
+                placeholder="ผลลัพธ์แสดงที่นี่...">
+              </div>
+              <div class="col-auto">
+              <!-- <button type="button" id="copyText" class="btn btn-sm btn-outline-primary mb-3">Copy</button> -->
+            </div>
+          </form>
+          <div class="right mt-2">
+            <img
+              src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FZeveNor&amp;label=VISITOR%20TOTAL&amp;labelColor=%23000000&amp;countColor=%23dce775">
+          </div> 
+        </div>
+        <div class="not-mobile">
           <p style="margin-bottom: 5px; font-weight: 500;">สร้างลิงก์ API ของตัวเอง</p>
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">ปลายทาง</span>
@@ -164,24 +204,23 @@
           </div>
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">จำนวนเงิน</span>
-            <input type="text" id="num" class="form-control" placeholder="0 - 999999" aria-label="Username"
+            <input type="text" id="num" class="form-control" placeholder="จำนวนเช่น 20 หรือ 20.00" aria-label="Username"
               aria-describedby="basic-addon1">
           </div>
           <button type="button" id="create" class="btn btn-primary">สร้าง</button>
           <button type="button" id="viewQR" class="btn btn-outline-success">แสดง QRCODE</button>
-          <form class="row g-0 mt-3">
+          <form class="row g-0 my-3">
             <div class="col-sm">
-              <input type="text" class="form-control text-gen" readonly
-                placeholder="ผลลัพธ์แสดงที่นี่ กดสร้างเพื่ออัปเดตลิงก์">
+              <input type="text" class="form-control sm text-gen" readonly placeholder="ผลลัพธ์แสดงที่นี่...">
             </div>
             <div class="col-auto">
-              <button type="button" id="copyText" class="btn btn-outline-primary mb-3">Copy</button>
+              <button type="button" id="copyText" class="btn  btn-outline-primary mb-3">Copy</button>
             </div>
           </form>
           <div class="right mt-2">
             <img
               src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FZeveNor&amp;label=VISITOR%20TOTAL&amp;labelColor=%23000000&amp;countColor=%23dce775">
-          </div> 
+          </div>
         </div>
 
         <script>
@@ -198,14 +237,24 @@
             window.location.href = url;
           });
 
-          $("#copyText").click(function () {
-            var url = updateURL();
-            navigator.clipboard.writeText(url).then(function () {
-              alert("Copied to clipboard: " + url);
-            }).catch(function (err) {
-              console.error("Error copying to clipboard: ", err);
+          $(".text-gen").click(
+            function () {
+              var url = updateURL();
+              navigator.clipboard.writeText(url).then(function () {
+                alert("Copied to clipboard: " + url);
+              }).catch(function (err) {
+                console.error("Error copying to clipboard: ", err);
+              });
             });
-          });
+
+          // $("#copyText").click(function () {
+          //   var url = updateURL();
+          //   navigator.clipboard.writeText(url).then(function () {
+          //     alert("Copied to clipboard: " + url);
+          //   }).catch(function (err) {
+          //     console.error("Error copying to clipboard: ", err);
+          //   });
+          // });
 
           function updateURL() {
             var destination = encodeURIComponent($("#dest").val());
@@ -338,7 +387,10 @@
         }); 
        } 
       else {
-        $("#output").html("<p style='color:red;'>คุณลืมใส่อะไรไปรึป่าว</p>");
+        $("#output").html("<p style='color:red;'>คุณลืมกรอกปลายทางผู้รับเงินไปรึป่าว</p>");
+        $("#nonValue").click(function () { 
+          location.reload(true); 
+        });
       }
 
       
