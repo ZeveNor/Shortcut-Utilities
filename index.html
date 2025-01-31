@@ -35,14 +35,16 @@
       flex-direction: column;
     }
 
-    .right{
+    .right {
       display: flex;
       justify-content: center;
     }
-    .not-mobile{
+
+    .not-mobile {
       display: block;
-    } 
-    .mobile{
+    }
+
+    .mobile {
       display: none;
     }
 
@@ -61,10 +63,12 @@
 
       p,
       div,
-      span,button{
+      span,
+      button {
         font-size: 12px !important;
       }
-      .btnd{
+
+      .btnd {
         font-size: 15px !important;
       }
 
@@ -73,14 +77,16 @@
       }
 
       .image {
-        margin: 0 20px; 
+        margin: 0 20px;
         width: 60vw !important;
       }
-      .not-mobile{
+
+      .not-mobile {
         display: none;
-      } 
-      .mobile{ 
-        display: block;  
+      }
+
+      .mobile {
+        display: block;
       }
     }
 
@@ -146,8 +152,9 @@
         <h3 id="destination"></h3>
       </div>
       <div class="center flex-row gap-2">
-        <button style="width: 90%;" data-bs-toggle="button" type="button" id="nonValue" class="btn btnd btn-outline-success mb-3 btn-lg">ไม่ระบุจำนวนเงิน</button>
-        <button style="width: 90%;" type="button" id="nonValue"
+        <button style="width: 90%;" data-bs-toggle="button" type="button" id="nonValue"
+          class="btn btnd btn-outline-success mb-3 btn-lg">ไม่ระบุจำนวนเงิน</button>
+        <button style="width: 90%;" type="button" id="saveImg"
           class="btn btn-primary mb-3 btn-lg btnd">บันทึกรูปภาพ</button>
       </div>
     </div>
@@ -175,25 +182,24 @@
               aria-label="Username" aria-describedby="basic-addon1">
           </div>
           <div class="input-group mb-3">
-            <!-- <span class="input-group-text" id="basic-addon1">จำนวนเงิน</span> --> 
+            <!-- <span class="input-group-text" id="basic-addon1">จำนวนเงิน</span> -->
             <input type="text" id="num" class="form-control" placeholder="จำนวนเช่น 20 หรือ 20.00" aria-label="Username"
               aria-describedby="basic-addon1">
           </div>
           <button type="button" id="create" class="btn btn-sm btn-primary">สร้าง</button>
           <button type="button" id="viewQR" class="btn btn-sm btn-outline-success">แสดง QRCODE</button>
-          <form class="row g-0 my-3"> 
+          <form class="row g-0 my-3">
             <div class="col-sm">
-              <input type="text" class="form-control sm text-gen" readonly
-                placeholder="ผลลัพธ์แสดงที่นี่...">
-              </div>
-              <div class="col-auto">
+              <input type="text" class="form-control sm text-gen" readonly placeholder="ผลลัพธ์แสดงที่นี่...">
+            </div>
+            <div class="col-auto">
               <!-- <button type="button" id="copyText" class="btn btn-sm btn-outline-primary mb-3">Copy</button> -->
             </div>
           </form>
           <div class="right mt-2">
             <img
               src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FZeveNor&amp;label=VISITOR%20TOTAL&amp;labelColor=%23000000&amp;countColor=%23dce775">
-          </div> 
+          </div>
         </div>
         <div class="not-mobile">
           <p style="margin-bottom: 5px; font-weight: 500;">สร้างลิงก์ API ของตัวเอง</p>
@@ -224,47 +230,7 @@
         </div>
 
         <script>
-          $("#dest, #num").on("input", function () {
-            updateURL();
-          });
-
-          $("#create").click(function () {
-            updateURL();
-          });
-
-          $("#viewQR").click(function () {
-            var url = updateURL();
-            window.location.href = url;
-          });
-
-          $(".text-gen").click(
-            function () {
-              var url = updateURL();
-              navigator.clipboard.writeText(url).then(function () {
-                alert("Copied to clipboard: " + url);
-              }).catch(function (err) {
-                console.error("Error copying to clipboard: ", err);
-              });
-            });
-
-          // $("#copyText").click(function () {
-          //   var url = updateURL();
-          //   navigator.clipboard.writeText(url).then(function () {
-          //     alert("Copied to clipboard: " + url);
-          //   }).catch(function (err) {
-          //     console.error("Error copying to clipboard: ", err);
-          //   });
-          // });
-
-          function updateURL() {
-            var destination = encodeURIComponent($("#dest").val());
-            var valueTotal = encodeURIComponent($("#num").val());
-            var url = `https://zevenor.github.io/Shortcut-Utilities/?Destnation=` + destination + `&Total=` + valueTotal;
-
-            $(".text-gen").val(url);
-            return url;
-          }
-
+         
         </script>
       </div>
     </div>
@@ -272,18 +238,86 @@
 
 
   <script>
-    $(document).ready(function () {
-      function getParams() {
-        const params = new URLSearchParams(window.location.search);
-        const phone = params.get("Destnation") || "";
-        const amount = params.get("Total") || "";
+    $("#dest, #num").on("input", function () {
+      updateURL();
+    });
 
-        return {
-          phone: phone ? phone.replace(/\D/g, '') : "",
-          amount: amount ? parseFloat(amount) : 0
-        };
+    $("#create").click(function () {
+      updateURL();
+    });
+
+    $("#viewQR").click(function () {
+      var url = updateURL();
+      window.location.href = url;
+    });
+
+    $(".text-gen").click(
+      function () {
+        var url = updateURL();
+        navigator.clipboard.writeText(url).then(function () {
+          alert("Copied to clipboard: " + url);
+        }).catch(function (err) {
+          console.error("Error copying to clipboard: ", err);
+        });
+      });
+
+    // QR from URL parameters
+    let { phone, amount } = getParams();
+
+    function transformAmount(amount) {
+        let amountString = amount.toFixed(2);
+        return amountString.replace('.', '1'); 
+    }
+
+    function getCurrentTime() {
+        let now = new Date();
+        let hour = now.getHours().toString().padStart(2, '0');  
+        let min = now.getMinutes().toString().padStart(2, '0'); 
+        let sec = now.getMinutes().toString().padStart(2, '0'); 
+        return `${hour}${min}${sec}`; 
       }
 
+    let saveBaseImg;
+    $('#saveImg').on('click', async function () {
+      if (saveBaseImg) {
+        var link = $('<a>');
+        link.attr('href', saveBaseImg);
+        link.attr('download', `zevPrmp${phone.slice(-4)}${transformAmount(amount)}${getCurrentTime()}.png`);
+        link[0].click();
+      } else {
+        alert("QR Code is not available.");
+      }
+    });
+
+    // $("#copyText").click(function () {
+    //   var url = updateURL();
+    //   navigator.clipboard.writeText(url).then(function () {
+    //     alert("Copied to clipboard: " + url);
+    //   }).catch(function (err) {
+    //     console.error("Error copying to clipboard: ", err);
+    //   });
+    // });
+
+    function updateURL() {
+      var destination = encodeURIComponent($("#dest").val());
+      var valueTotal = encodeURIComponent($("#num").val());
+      var url = `https://zevenor.github.io/Shortcut-Utilities/?Destnation=` + destination + `&Total=` + valueTotal;
+
+      $(".text-gen").val(url);
+      return url;
+    }
+
+    function getParams() {
+      const params = new URLSearchParams(window.location.search);
+      const phone = params.get("Destnation") || "";
+      const amount = params.get("Total") || "";
+
+      return {
+        phone: phone ? phone.replace(/\D/g, '') : "",
+        amount: amount ? parseFloat(amount) : 0
+      };
+    }
+    $(document).ready(function () {
       function format(id, value) {
         count = value.length;
         header = count.toString().padStart(2, '0');
@@ -338,7 +372,7 @@
         }
         return (crc & 0xFFFF).toString(16).padStart(4, '0');
       }
-
+ 
       function showEverything(img, phone, amount) {
         $("output").empty();
         $('#output').html('<img class="w-100" src="' + img + '" />');
@@ -352,8 +386,8 @@
           text: qrData,
           width: 500,
           height: 500,
-          colorDark: "#1c1c1c", // Dark color (QR code)
-          colorLight: "#ffffff" // Light color (background)
+          colorDark: "#1c1c1c", 
+          colorLight: "#ffffff"
         });
 
         let canvas = $('#output canvas');
@@ -361,57 +395,60 @@
         return (img)
       }
 
-      // QR from URL parameters
       let { phone, amount } = getParams();
       let pressTrack = false;
-
+   
       if (phone) {
         let img = makeQR(generateString(phone, amount))
-        showEverything(img,phone,amount);
+        saveBaseImg = img;
+        showEverything(img, phone, amount);
 
-        $("#nonValue").click(function () { 
+        $("#nonValue").click(function () {
           let oldAmount = amount;
-          if (pressTrack === true){
+          if (pressTrack === true) {
             amount = oldAmount;
             let img = makeQR(generateString(phone, amount))
             showEverything(img, phone, amount);
-            
-             pressTrack = false;
-          } else if (pressTrack === false){
+
+            pressTrack = false;
+          } else if (pressTrack === false) {
             let amount = 0;
             let img = makeQR(generateString(phone, amount))
             showEverything(img, phone, amount);
-            
+
             pressTrack = true;
-          }    
-        }); 
-       } 
+          }
+        });
+        
+      }
       else {
         $("#output").html("<p style='color:red;'>คุณลืมกรอกปลายทางผู้รับเงินไปรึป่าว</p>");
-        $("#nonValue").click(function () { 
-          location.reload(true); 
+        $("#nonValue").click(function () {
+          location.reload(true);
         });
       }
 
-      
+
     });
   </script>
   <!-- <div style="background-color: rgb(68, 64, 64); height: 50px; width: 100%; margin: 0; padding: 0;"></div> -->
-  
-  <div class="center mt-0 mb-4"><a style="font-size: 13px;" class="text-body-secondary" href='https://zevenor.github.io/Shortcut-Utilities/?Destnation=0909845370&Total=0'>แบ่งปันค่าชานมเย็น คลิกข้อความเพื่อสร้างคิวอาร์โค้ด</a></div>
+
+  <div class="center mt-0 mb-4"><a style="font-size: 13px;" class="text-body-secondary"
+      href='https://zevenor.github.io/Shortcut-Utilities/?Destnation=0909845370&Total=0'>แบ่งปันค่าชานมเย็น
+      คลิกข้อความเพื่อสร้างคิวอาร์โค้ด</a></div>
   <div class="border"></div>
   <footer class="container">
     <div
-    class="d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between gap-2 align-items-center my-4 ps-3 pe-3">
-    <div class="d-flex align-items-center justify-content-center">
-      <span class="text-body-secondary">© 2025 | Created By ZeveNor </span>
-    </div>
-    <ul class="nav list-unstyled align-items-center justify-content-center">
-      <li>
-        <a class="text-body-secondary" href="mailto:panthep094@gmail.com">
-          <box-icon name="envelope" size="sm" type="logo"></box-icon>
-        </a>
-      </li>
+      class="d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between gap-2 align-items-center my-4 ps-3 pe-3">
+      <div class="d-flex align-items-center justify-content-center">
+        <span class="text-body-secondary">© 2025 | Created By ZeveNor </span>
+      </div>
+      <ul class="nav list-unstyled align-items-center justify-content-center">
+        <li>
+          <a class="text-body-secondary" href="mailto:panthep094@gmail.com">
+            <box-icon name="envelope" size="sm" type="logo"></box-icon>
+          </a>
+        </li>
         <li class="ms-3">
           <a class="text-body-secondary" href="https://github.com/ZeveNor">
             <box-icon name="github" size="sm" type="logo"></box-icon>
