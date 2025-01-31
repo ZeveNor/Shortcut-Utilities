@@ -49,9 +49,9 @@
       .check-box {
         width: 80vw !important;
       }
-      .image {
-        margin: 0 20px;
-        width: 30vw; 
+      .image { 
+        margin: 0 20px; 
+        width: 50vw !important;  
       }
     }
      
@@ -80,7 +80,7 @@
 
     .image {
       margin: 0 40px;
-      width: 50vw;
+      width: 20vw;
       height: auto;
     }
 
@@ -114,7 +114,7 @@
       <h1 id="total"></h1>
       <h3 id="destination"></h3>
     </div>
-    <h2 style="color: rgb(73, 32, 131);">| &nbsp;&nbsp;&nbsp;&nbsp; BY ZEV &nbsp;&nbsp;&nbsp;&nbsp; |</h2>
+    <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FZeveNor&amp;label=VISITOR%20TOTAL&amp;labelColor=%23#2596be&amp;countColor=%23dce775">
     <div class="check-box">
       <div>
         <div class="flex-lg-row" style=" gap: 25px; margin-bottom: 30px;">
@@ -136,7 +136,10 @@
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">ปลายทาง</span>
             <input type="text" id="dest" class="form-control" placeholder="เบอร์โทรศัพท์ / บัตรปชช. / E-Wallet ID"
-              aria-label="Username" aria-describedby="basic-addon1">
+              aria-label="Username" aria-describedby="basic-addon1" list="destina">
+            <datalist id="destina">
+              <option value="12035"></option>
+            </datalist>
           </div>
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">จำนวนเงิน</span>
@@ -144,35 +147,50 @@
               aria-describedby="basic-addon1">
           </div> 
           <button type="button" id="create" class="btn btn-primary">สร้าง</button>
-          <button type="button" id="copyText" class="btn btn-outline-success">คัดลอกลิงก์</button>
-          <textarea class="form-control text-gen" disabled id="exampleFormControlTextarea1"
-            rows="1"></textarea>
-
+          <button type="button" id="viewQR" class="btn btn-outline-success">แสดง QRCODE</button>
+          <form class="row g-0 mt-3">
+            <div class="col-sm">
+              <input type="text" class="form-control text-gen" readonly placeholder="ผลลัพธ์แสดงที่นี่ กดสร้างเพื่ออัปเดตลิงก์">
+            </div> 
+            <div class="col-auto">
+              <button type="button" id="copyText" class="btn btn-outline-primary mb-3">Copy</button>
+            </div>
+          </form>
         </div>
         
         <script>
-          $("#dest").keypress(function () {
-            var destination = $("#dest").val();
-            var valueTotal = $("#num").val();
-            $(".text-gen").text("https://zevenor.github.io/Shortcut-Utilities/?Destnation=" + destination + "&Total=" + valueTotal);
-          });
-          $("#num").keypress(function () {
-              var destination = $("#dest").val();
-              var valueTotal = $("#num").val();
-              $(".text-gen").text("https://zevenor.github.io/Shortcut-Utilities/?Destnation=" + destination + "&Total=" + valueTotal);
+          $("#dest, #num").on("input", function () {
+              updateURL();
             });
-          $("#copyText").click(function () {
-              var textToCopy = $(".text-gen").val();
 
-              navigator.clipboard.writeText(textToCopy).then(function () {
-                alert("Copied to clipboard: " + textToCopy);
+            $("#create").click(function () {
+              updateURL();
+            });
+
+            $("#viewQR").click(function () {
+              var url = updateURL();
+              window.location.href = url;
+            });
+
+            $("#copyText").click(function () {
+              var url = updateURL();
+              navigator.clipboard.writeText(url).then(function () {
+                alert("Copied to clipboard: " + url);
               }).catch(function (err) {
                 console.error("Error copying to clipboard: ", err);
               });
             });
-        </script>
 
-        
+            function updateURL() {
+              var destination = encodeURIComponent($("#dest").val());
+              var valueTotal = encodeURIComponent($("#num").val());
+              var url = `https://zevenor.github.io/Shortcut-Utilities/?Destnation=` + destination + `&Total=` + valueTotal;
+
+              $(".text-gen").val(url); 
+              return url;
+            }
+
+        </script>
       </div>
     </div>
   </div>
@@ -251,6 +269,8 @@
 
       if (phone) {
         let qrData = generatePromptPayQR(phone, amount);
+        
+        
 
         // Generate QR Code and append it to #output
         let qrCode = new QRCode($('#output')[0], {
@@ -263,18 +283,45 @@
         let canvas = $('#output canvas');
         let img = canvas.get(0).toDataURL("image/png");
 
+        console.log(phone,amount); 
+        
         // Show the image in the div
         $('#output').html('<img class="w-100" src="' + img + '" />');
 
         $("#total").text("จำนวนเงิน : " + amount.toFixed(2));
         $("#destination").text("บัญชีรับเงิน \xa0\xa0 : \xa0\xa0" + phone + "\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0");
-
+        $("#destina").html('<option value="' + phone + '"></option>');
       } else {
-        $("#output").html("<p style='color:red;'>Input Data Wrong</p>");
+        $("#output").html("<p style='color:red;'>คุณลืมใส่อะไรไปรึป่าวเช็คด้านล่างนี้ แล้วดูว่าลืมอะไร</p>");
       }
     });
-  </script>
+  </script> 
   <!-- <div style="background-color: rgb(68, 64, 64); height: 50px; width: 100%; margin: 0; padding: 0;"></div> -->
+  <div class="border"></div>
+  <footer class="container">
+    <div class="d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between gap-2 align-items-center my-4 ps-3 pe-3">
+      <div class="d-flex align-items-center justify-content-center">
+        <span class="text-body-secondary">© 2025 | Created By ZeveNor </span>
+      </div>
+      <ul class="nav list-unstyled align-items-center justify-content-center">
+        <li>
+          <a class="text-body-secondary" href="mailto:panthep094@gmail.com">
+            <box-icon name="envelope" size="sm" type="logo"></box-icon>
+          </a>
+        </li>
+        <li class="ms-3">
+          <a class="text-body-secondary" href="https://github.com/ZeveNor">
+            <box-icon name="github" size="sm" type="logo"></box-icon>
+          </a>
+        </li>
+        <li class="ms-3">
+          <a class="text-body-secondary" href="https://discord.gg/fCz6DHGrxt">
+            <box-icon name="discord-alt" size="sm" type="logo"></box-icon>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </footer>
 </body>
 
 </html>
